@@ -1,0 +1,110 @@
+﻿
+@model PagedList.IPagedList<CityInformation.Models.City>
+@using CityInformation.Models
+@using PagedList.Mvc;
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Search</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-theme.css" rel="stylesheet" />
+</head>
+    <body>
+        <ul class="list-inline">
+            <li><a href=@Url.Action("Save","Country")>Country Entry</a></li>
+            <li><a href=@Url.Action("Save","City")>City Entry</a></li>
+            <li><a href=@Url.Action("Search","Country")>View Countries</a></li>
+            <li><a href=@Url.Action("Search","City")>View Cities</a></li>
+        </ul>
+        <h2>View Cities</h2>
+        <h3>Search Criteria</h3>
+        @using (Html.BeginForm("Search", "City", FormMethod.Get))
+        {
+            <p><input id="Radio1" name="City" type="radio" />
+                City Name: @Html.TextBox("Search_Data", ViewBag.FilterValue as string)</p>
+            <p><input id="Radio2" name="Country" type="radio" />
+                Country: @Html.DropDownList("Search_Country", ViewBag.FilterValue as string)
+                
+
+                <input type="submit" value="Search" />
+            </p>
+           
+               
+        }
+        <table class="table">
+        
+            <tr>
+                <th>
+                    @Html.Label("Serial No")
+                </th>
+                <th>
+                    @Html.Label("Name")
+                </th>
+                <th>
+                    @Html.Label("About")
+                </th>
+                <th>
+                    @Html.Label("No Of Dwellers")
+                </th>
+                <th>
+                    @Html.Label("Location")
+                </th>
+                <th>
+                    @Html.Label("Weather")
+                </th>
+                <th>
+                    @Html.Label("Country")
+                </th>
+                <th>
+                    @Html.Label("About Country")
+                </th>
+            </tr>
+            @{
+                var serial = 1;
+            }
+            @foreach (var item in Model) {
+                <tr>
+                    <td>
+                        @serial
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.About)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NoOfDwellers)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Location)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Weather)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ACountry.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ACountry.About)
+                    </td>
+                </tr>
+                serial++;
+            }
+    
+        </table>
+        <br />
+        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+        @Html.PagedListPager(Model, Page_No => Url.Action("Search",
+            new { Page_No, Sorting_Order = ViewBag.CurrentSortOrder, Filter_Value = ViewBag.FilterValue }))
+    
+    </body>
+</html>
